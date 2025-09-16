@@ -100,8 +100,11 @@ Halaman setelah login berhasil. Menampilkan:
 ## 5. Dokumentasi
 📸 Tambahkan screenshot hasil running aplikasi, misalnya:  
 - Halaman Login  
+![Register](images/7.png)
 - Halaman Registrasi  
-- Halaman Home setelah login  
+![Register](images/6.png)
+- Halaman Home setelah login
+![Home Page](images/5.png)
 
 ---
 
