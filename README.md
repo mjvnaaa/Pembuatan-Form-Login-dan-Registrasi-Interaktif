@@ -171,7 +171,44 @@ void _showErrorDialog(String message) {
   );
 }
 ```
-2. **Tampilkan/Sembunyikan Password**: Tambahkan ikon mata (`Icons.visibility`) untuk toggle password.  
+2. **Tampilkan/Sembunyikan Password**: Tambahkan ikon mata (`Icons.visibility`) untuk toggle password.
+
+### Latihan 2 – Fitur Tampilkan/Sembunyikan Password
+
+Pada latihan ini saya menambahkan fitur untuk menampilkan dan menyembunyikan password di halaman **Register** dan **Login**. Tujuan dari perbaikan ini adalah memberikan kenyamanan bagi pengguna ketika ingin memastikan password yang diketik sudah benar.  
+
+Untuk menerapkan fitur ini, saya menambahkan sebuah variabel `bool` bernama `_obscurePassword` yang berfungsi sebagai penanda apakah password sedang dalam kondisi tersembunyi atau terlihat. Variabel ini kemudian dihubungkan dengan properti `obscureText` pada `TextField`.  
+
+Selain itu, saya juga menambahkan widget `suffixIcon` berupa **IconButton**. Saat ikon ditekan, nilai `_obscurePassword` akan berubah dengan menggunakan `setState()`, sehingga tampilan password bisa ditampilkan atau disembunyikan sesuai kebutuhan pengguna.  
+
+Contoh kode yang ditambahkan:  
+
+```dart
+bool _obscurePassword = true; // nilai awal: password disembunyikan
+
+TextField(
+  controller: _passwordController,
+  obscureText: _obscurePassword,
+  decoration: InputDecoration(
+    hintText: 'Password',
+    prefixIcon: const Icon(Icons.lock),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
+    ),
+    suffixIcon: IconButton(
+      icon: Icon(
+        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+      ),
+      onPressed: () {
+        setState(() {
+          _obscurePassword = !_obscurePassword;
+        });
+      },
+    ),
+  ),
+),
+```
 3. **Animasi Hero Widget**: Tambahkan efek transisi pada ikon di halaman login dan registrasi.  
 4. **Shared Preferences**: Simpan status login agar pengguna tidak perlu login ulang saat aplikasi dibuka kembali.  
 

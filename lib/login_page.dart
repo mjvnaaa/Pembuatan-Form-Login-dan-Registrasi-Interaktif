@@ -13,18 +13,19 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obsecurePassowrd = true; // INI UNTUK OBSCURE PASSWORD
 
   void _login() {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    if (userData.containsKey(email) && userData[email]!['password'] == password) {
+    if (userData.containsKey(email) &&
+        userData[email]!['password'] == password) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(
-            fullName: userData[email]!['fullName']!,
-          ),
+          builder: (context) =>
+              HomePage(fullName: userData[email]!['fullName']!),
         ),
       );
     } else {
@@ -93,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: _obsecurePassowrd,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     filled: true,
@@ -103,6 +104,17 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    // INI UNTUK MATA YANG PASSWORD
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obsecurePassowrd ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obsecurePassowrd = !_obsecurePassowrd;
+                        });
+                      },
+                    )
                   ),
                 ),
                 SizedBox(height: 30),
@@ -121,19 +133,25 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don’t have an account?",
-                        style: TextStyle(color: Colors.white70)),
+                    Text(
+                      "Don’t have an account?",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RegisterPage()),
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          ),
                         );
                       },
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
