@@ -92,10 +92,9 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const Icon(
-                  Icons.person_add_alt_1,
-                  size: 80,
-                  color: Colors.white,
+                Hero(
+                  tag: 'appIcon', 
+                  child: Icon(Icons.person_add_alt_1, size: 80,color: Colors.white)
                 ),
                 const SizedBox(height: 20),
                 const Text(

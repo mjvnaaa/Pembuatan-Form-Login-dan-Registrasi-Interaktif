@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pembuatan_form_login_dan_registrasi_interaktif/register_page.dart';
 import 'package:pembuatan_form_login_dan_registrasi_interaktif/home_page.dart';
 import 'package:pembuatan_form_login_dan_registrasi_interaktif/data/user_data.dart';
@@ -15,13 +16,17 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   bool _obsecurePassowrd = true; // INI UNTUK OBSCURE PASSWORD
 
-  void _login() {
+  void _login() async {
     String email = _emailController.text;
     String password = _passwordController.text;
 
     if (userData.containsKey(email) &&
         userData[email]!['password'] == password) {
-      Navigator.pushReplacement(
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('isLoggedIn', userData[email]!['fullName']!);
+        await prefs.setBool('isLoggedIn', true);
+        
+        Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) =>
@@ -65,7 +70,10 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Icon(Icons.lock_person, size: 80, color: Colors.white),
+                Hero(
+                  tag: 'appIcon',
+                  child: Icon(Icons.lock_person, size: 80, color: Colors.white),
+                ),
                 SizedBox(height: 20),
                 Text(
                   'Welcome Back!',
@@ -107,14 +115,16 @@ class _LoginPageState extends State<LoginPage> {
                     // INI UNTUK MATA YANG PASSWORD
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obsecurePassowrd ? Icons.visibility : Icons.visibility_off,
+                        _obsecurePassowrd
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
                           _obsecurePassowrd = !_obsecurePassowrd;
                         });
                       },
-                    )
+                    ),
                   ),
                 ),
                 SizedBox(height: 30),
