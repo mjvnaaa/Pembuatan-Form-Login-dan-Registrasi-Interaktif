@@ -90,7 +90,87 @@ Halaman setelah login berhasil. Menampilkan:
 - Menyimpan data sementara dalam variabel global.  
 
 ### Latihan Pengembangan
-1. **Validasi Input**: Tambahkan pengecekan format email (mengandung `@`) dan password minimal 6 karakter.  
+1. **Validasi Input**: Tambahkan pengecekan format email (mengandung `@`) dan password minimal 6 karakter. 
+
+### Perbaikan Validasi Registrasi
+
+Pada bagian ini saya melakukan perbaikan kode pada halaman **Register**. Sebelumnya, validasi hanya mengecek apakah kolom sudah diisi atau belum. Setelah diperbaiki, saya menambahkan validasi yang lebih ketat supaya data yang masuk sesuai dengan aturan yang diharapkan.  
+
+Beberapa perubahan yang saya lakukan yaitu:  
+1. Menambahkan fungsi `_showErrorDialog()` agar pesan kesalahan bisa ditampilkan lebih rapi dan terpusat.  
+2. Menggunakan `.trim()` pada input untuk menghapus spasi berlebih.  
+3. Menambahkan validasi format email yang harus mengandung karakter `@`.  
+4. Menambahkan validasi panjang password minimal 6 karakter.  
+
+Dengan perbaikan ini, pengguna mendapat informasi yang lebih jelas saat melakukan kesalahan input, dan kode juga menjadi lebih terorganisir serta mudah dipelihara.
+
+
+---
+
+### Kode yang di-upgrade
+
+Berikut adalah beberapa bagian kode yang diubah untuk menerapkan validasi yang lebih baik:
+
+Kode sebelum hanya memeriksa apakah kolom kosong
+```
+void _register() {
+  String fullName = _fullNameController.text;
+  String email = _emailController.text;
+  String password = _passwordController.text;
+  if (fullName.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+    // ... logika registrasi
+  } else {
+    showDialog(
+      // ... pesan error
+    );
+  }
+}
+```
+Kode sesudah sudah ada validasi email & password
+```
+void _register() {
+  String fullName = _fullNameController.text.trim();
+  String email = _emailController.text.trim();
+  String password = _passwordController.text.trim();
+
+  // Memeriksa apakah ada kolom yang kosong
+  if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
+    _showErrorDialog('Harap isi semua kolom.');
+    return;
+  }
+
+  // Memeriksa format email
+  if (!email.contains('@')) {
+    _showErrorDialog('Format email tidak valid.');
+    return;
+  }
+
+  // Memeriksa panjang password
+  if (password.length < 6) {
+    _showErrorDialog('Password minimal 6 karakter.');
+    return;
+  }
+
+  // ... logika registrasi jika semua validasi lolos
+}
+
+// Fungsi pembantu untuk menampilkan dialog kesalahan
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Error'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+```
 2. **Tampilkan/Sembunyikan Password**: Tambahkan ikon mata (`Icons.visibility`) untuk toggle password.  
 3. **Animasi Hero Widget**: Tambahkan efek transisi pada ikon di halaman login dan registrasi.  
 4. **Shared Preferences**: Simpan status login agar pengguna tidak perlu login ulang saat aplikasi dibuka kembali.  

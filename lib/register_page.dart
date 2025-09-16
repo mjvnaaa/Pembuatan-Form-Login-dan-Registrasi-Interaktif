@@ -13,48 +13,64 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _register() {
-    String fullName = _fullNameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String fullName = _fullNameController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-    if (fullName.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
-      userData[email] = {
-        'fullName': fullName,
-        'password': password,
-      };
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Registrasi Berhasil'),
-          content: Text('Akun Anda telah dibuat. Silakan login.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-                Navigator.pop(context); // Kembali ke halaman login
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Registrasi Gagal'),
-          content: Text('Harap isi semua kolom.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+    // cek kosong
+    if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
+      _showErrorDialog('Harap isi semua kolom.');
+      return;
     }
+
+    // cek email
+    if (!email.contains('@')) {
+      _showErrorDialog('Format email tidak valid.');
+      return;
+    }
+
+    // cek panjang password
+    if (password.length < 6) {
+      _showErrorDialog('Password minimal 6 karakter.');
+      return;
+    }
+
+    // jika Semua valid baru simpan user
+    userData[email] = {'fullName': fullName, 'password': password};
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Registrasi Berhasil'),
+        content: const Text('Akun Anda telah dibuat. Silakan login.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Tutup dialog
+              Navigator.pop(context); // Kembali ke halaman login
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -62,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF6DD5FA), Color(0xFF2980B9)],
             begin: Alignment.topLeft,
@@ -75,9 +91,13 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Icon(Icons.person_add_alt_1, size: 80, color: Colors.white),
-                SizedBox(height: 20),
-                Text(
+                const Icon(
+                  Icons.person_add_alt_1,
+                  size: 80,
+                  color: Colors.white,
+                ),
+                const SizedBox(height: 20),
+                const Text(
                   'Create Account',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -86,21 +106,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 TextField(
                   controller: _fullNameController,
                   decoration: InputDecoration(
                     hintText: 'Full Name',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -108,14 +128,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Email',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -123,37 +143,41 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Password',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _register,
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.blue.shade700,
+                    foregroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text('Register', style: TextStyle(fontSize: 18)),
+                  child: const Text('Register', style: TextStyle(fontSize: 18)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account?",
-                        style: TextStyle(color: Colors.white70)),
+                    const Text(
+                      "Already have an account?",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text(
+                      child: const Text(
                         'Sign In',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
